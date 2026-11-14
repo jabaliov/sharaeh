@@ -94,7 +94,8 @@ aside{gap:7px}
 .actions{gap:6px}
 aside{gap:10px}
 }
- </style>
+ .width-actions{display:flex;gap:8px}.width-actions button{flex:1;font-size:11px}.width-field{padding-top:12px;border-top:1px solid #314737}.width-field p{line-height:1.5}.actions{grid-template-columns:1fr}.actions #replace{grid-column:auto}@media(max-width:700px){.width-field{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:7px;padding-top:8px}.width-field>.controls,.width-field>p,.width-field>.width-actions{grid-column:1/-1}.width-field>label[for="stripWidth"]{grid-column:1/-1}.hint-info{display:none}.actions{grid-template-columns:1fr auto}.actions #replace{padding:9px}.width-field p{font-size:10px}.app{min-height:580px}aside{gap:8px}.width-field .width-actions{gap:6px}.width-field button{padding:8px}}@media(max-height:640px){.app{min-height:0;padding:10px;gap:8px}.width-field p:not(#widthSummary){display:none}.width-field{gap:5px}.field{gap:5px}aside{gap:7px}.badge{display:none}.width-field{padding-top:6px}.width-field button{padding:6px}}
+</style>
 </head>
 <body>
 <main class="app empty" id="app">
@@ -115,9 +116,9 @@ aside{gap:10px}
 <span class="hint">JPG · PNG · WebP</span>
 </label>
 <input class="hidden" id="file" type="file" accept="image/jpeg,image/png,image/webp">
-<canvas id="preview" aria-label="معاينة الشرائح؛ اضغط على شريحة لعرضها وحدها">
+<canvas id="preview" aria-label="معاينة الشرائح؛ اضغط شريحة لتحديدها وتعديل عرضها">
 </canvas>
-<span class="badge hidden" id="badge">اضغط على أي شريحة لفتحها</span>
+<span class="badge hidden" id="badge">اضغط شريحة لتعديل عرضها</span>
 </section>
 <aside>
 <div class="intro">
@@ -134,14 +135,7 @@ aside{gap:10px}
 <input id="countN" type="number" aria-label="عدد الشرائح بدقة" min="2" max="20" value="12">
 </div>
 </div>
-<div class="field">
-<label class="label" for="curve">انحناء الأطراف <output id="curveOut">100%</output>
-</label>
-<div class="controls">
-<input id="curve" type="range" min="0" max="100" value="100">
-<input id="curveN" type="number" aria-label="نسبة انحناء الأطراف" min="0" max="100" value="100">
-</div>
-</div>
+
 <div class="field">
 <label class="label" for="gap">الفاصل بين الشرائح <output id="gapOut">16%</output>
 </label>
@@ -157,9 +151,18 @@ aside{gap:10px}
 <option value="ltr">من اليسار إلى اليمين</option>
 </select>
 </div>
-<p class="hint-info">أطراف شفافة بصيغة PNG، مع الحفاظ على دقة الصورة الأصلية.</p>
+<div class="field width-field">
+<label class="label" for="selectedStrip">الشريحة المحددة</label>
+<select id="selectedStrip" aria-label="اختيار الشريحة لتعديل عرضها"></select>
+<label class="label" for="stripWidth">عرض منطقة القص <span class="small">بكسل</span></label>
+<div class="controls"><input id="stripWidth" type="range" min="1" max="1000" value="100"><input id="stripWidthN" type="number" aria-label="عرض الشريحة بالبكسل" min="1" max="1000" value="100"></div>
+<p class="small" id="widthSummary" aria-live="polite"></p>
+<p class="small">توسيع شريحة يعيد توزيع عرض الشرائح الأخرى للحفاظ على الصورة كاملة.</p>
+<div class="width-actions"><button class="secondary" id="equalWidths">توزيع متساوٍ</button><button class="secondary" id="openStrip">فتح الشريحة</button></div>
+</div>
+<p class="hint-info">قصّ مستطيل دون تمديد الصورة. يمكنك حفظ الشرائح معًا أو تنزيل كل شريحة وحدها.</p>
 <div class="actions">
-<button class="primary" id="download" disabled>تحميل الشرائح ZIP ↓</button>
+
 <button class="primary" id="galleryPrepare" disabled>حفظ في الاستديو</button>
 <button class="secondary" id="replace">تغيير الصورة</button>
 <div id="message" role="status" aria-live="polite">
@@ -193,20 +196,28 @@ aside{gap:10px}
 </dialog><script>
 
 'use strict';
-const $=id=>document.getElementById(id);let img=null,filename='strips',busy=false,selected=0,view={};
-const values=()=>({n:+$('count').value,curve:+$('curve').value/100,gap:+$('gap').value/100});
-for(const id of ['count','curve','gap'])for(const suffix of ['', 'N'])$(id+suffix).addEventListener('input',e=>{const a=$(id),v=Math.max(+a.min,Math.min(+a.max,Math.round(+e.target.value||+a.min)));a.value=$(id+'N').value=v;if(id!=='count')$(id+'Out').textContent=v+'%';render();});
-$('order').onchange=render;$('replace').onclick=()=>$('file').click();$('file').onchange=e=>load(e.target.files[0]);
+const $=id=>document.getElementById(id);let img=null,filename='strips',busy=false,selected=0,view={},widths=[];
+const values=()=>({n:+$('count').value,gap:+$('gap').value/100});
+function resetWidths(){if(!img)return;const n=values().n,w=img.naturalWidth;widths=Array.from({length:n},(_,i)=>Math.round((i+1)*w/n)-Math.round(i*w/n));selected=Math.min(selected,n-1);syncSelection();render();}
+function apportion(total,weights){const spare=total-weights.length,sum=weights.reduce((a,b)=>a+b,0);const exact=weights.map(v=>spare*v/sum),result=exact.map(v=>1+Math.floor(v));let left=total-result.reduce((a,b)=>a+b,0);const order=exact.map((v,i)=>({i,f:v-Math.floor(v)})).sort((a,b)=>b.f-a.f||a.i-b.i);for(let j=0;j<left;j++)result[order[j].i]++;return result;}
+function setWidth(value){if(!img||busy)return;const w=img.naturalWidth,n=values().n,v=Math.max(1,Math.min(w-n+1,Math.round(+value||1))),ids=widths.map((_,i)=>i).filter(i=>i!==selected),next=apportion(w-v,ids.map(i=>widths[i]));ids.forEach((i,k)=>widths[i]=next[k]);widths[selected]=v;syncSelection(false);render();}
+function syncSelection(rebuild=true){if(!img)return;if(rebuild){$('selectedStrip').replaceChildren();for(let k=1;k<=values().n;k++){const i=$('order').value==='rtl'?values().n-k:k-1,o=document.createElement('option');o.value=i;o.textContent='الشريحة '+k;$('selectedStrip').append(o);}}
+ $('selectedStrip').value=selected;for(const id of ['stripWidth','stripWidthN']){$(id).max=img.naturalWidth-values().n+1;$(id).value=widths[selected];}const b=bounds(selected);$('widthSummary').textContent='الشريحة '+number(selected)+' · عرض الملف بعد الفاصل: '+b.w+' بكسل';}
+for(const id of ['count','gap'])for(const suffix of ['', 'N'])$(id+suffix).addEventListener('input',e=>{if(busy)return;const a=$(id),v=Math.max(+a.min,Math.min(+a.max,Math.round(+e.target.value||+a.min)));a.value=$(id+'N').value=v;if(id==='count')resetWidths();else{$('gapOut').textContent=v+'%';syncSelection(false);render();}});
+$('stripWidth').oninput=e=>setWidth(e.target.value);$('stripWidthN').onchange=e=>setWidth(e.target.value);$('stripWidthN').onkeydown=e=>{if(e.key==='Enter')setWidth(e.target.value);};
+$('selectedStrip').onchange=e=>{selected=+e.target.value;syncSelection(false);render();};$('equalWidths').onclick=resetWidths;$('openStrip').onclick=()=>openSingle();
+$('order').onchange=()=>{syncSelection();render();};$('replace').onclick=()=>$('file').click();$('file').onchange=e=>load(e.target.files[0]);
 for(const ev of ['dragenter','dragover'])$('stage').addEventListener(ev,e=>{e.preventDefault();$('stage').classList.add('dragging')});for(const ev of ['dragleave','drop'])$('stage').addEventListener(ev,e=>{e.preventDefault();$('stage').classList.remove('dragging')});$('stage').addEventListener('drop',e=>load(e.dataTransfer.files[0]));
-async function load(file){if(!file||busy)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ $('message').textContent='اختر صورة JPG أو PNG أو WebP.';return;}const url=URL.createObjectURL(file);try{const next=new Image();next.src=url;await next.decode();if(next.naturalWidth<20)throw Error('small');if(next.naturalWidth*next.naturalHeight>50000000)throw Error('large');img=next;$('app').classList.remove('empty');filename=file.name.replace(/\.[^.]+$/,'');$('drop').classList.add('hidden');$('preview').style.display='block';$('badge').classList.remove('hidden');$('download').disabled=false;$('galleryPrepare').disabled=false;$('dimensions').textContent=img.naturalWidth+' × '+img.naturalHeight+' px';$('message').textContent='';render();}catch(e){$('message').textContent=e.message==='large'?'الصورة كبيرة جدًا؛ اختر صورة أقل من ٥٠ مليون بكسل.':'تعذّر قراءة الصورة؛ جرّب صورة أخرى.';}finally{URL.revokeObjectURL(url);$('file').value='';}}
-function bounds(index){const {n,gap}=values(),w=img.naturalWidth;const l=Math.round(index*w/n),r=Math.round((index+1)*w/n),inset=Math.round((r-l)*gap/2);return {x:l+inset,w:Math.max(1,r-l-2*inset),h:img.naturalHeight};}
-function path(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
-function paint(ctx,index,x,y,scale){const b=bounds(index),w=b.w*scale,h=b.h*scale;ctx.save();path(ctx,x,y,w,h,w/2*values().curve);ctx.clip();ctx.drawImage(img,b.x,0,b.w,b.h,x,y,w,h);ctx.restore();}
-function render(){if(!img)return;const c=$('preview'),rect=$('stage').getBoundingClientRect(),W=Math.max(1,rect.width-48),H=Math.max(1,rect.height-48),dpr=Math.min(devicePixelRatio||1,2);c.width=W*dpr;c.height=H*dpr;const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const scale=Math.min(W/img.naturalWidth,H/img.naturalHeight),ow=img.naturalWidth*scale,oh=img.naturalHeight*scale,x=(W-ow)/2,y=(H-oh)/2;view={x,y,w:ow,h:oh,W,H};for(let i=0;i<values().n;i++)paint(ctx,i,x+bounds(i).x*scale,y,scale);}
+async function load(file){if(!file||busy)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ $('message').textContent='اختر صورة JPG أو PNG أو WebP.';return;}const url=URL.createObjectURL(file);try{const next=new Image();next.src=url;await next.decode();if(next.naturalWidth<20)throw Error('small');if(next.naturalWidth*next.naturalHeight>50000000)throw Error('large');img=next;$('app').classList.remove('empty');filename=file.name.replace(/\.[^.]+$/,'');$('drop').classList.add('hidden');$('preview').style.display='block';$('badge').classList.remove('hidden');$('galleryPrepare').disabled=false;$('dimensions').textContent=img.naturalWidth+' × '+img.naturalHeight+' px';$('message').textContent='';selected=$('order').value==='rtl'?values().n-1:0;resetWidths();}catch(e){$('message').textContent=e.message==='large'?'الصورة كبيرة جدًا؛ اختر صورة أقل من ٥٠ مليون بكسل.':'تعذّر قراءة الصورة؛ جرّب صورة أخرى.';}finally{URL.revokeObjectURL(url);$('file').value='';}}
+function bounds(index){const {gap}=values();const l=widths.slice(0,index).reduce((a,b)=>a+b,0),raw=widths[index],inset=Math.round(raw*gap/2);return {x:l+inset,w:Math.max(1,raw-2*inset),h:img.naturalHeight};}
+function paint(ctx,index,x,y,scale){const b=bounds(index);ctx.drawImage(img,b.x,0,b.w,b.h,x,y,b.w*scale,b.h*scale);}
+function render(){if(!img)return;const c=$('preview'),rect=$('stage').getBoundingClientRect(),W=Math.max(1,rect.width-48),H=Math.max(1,rect.height-48),dpr=Math.min(devicePixelRatio||1,2);c.width=W*dpr;c.height=H*dpr;const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const scale=Math.min(W/img.naturalWidth,H/img.naturalHeight),ow=img.naturalWidth*scale,oh=img.naturalHeight*scale,x=(W-ow)/2,y=(H-oh)/2;view={x,y,w:ow,h:oh,W,H};for(let i=0;i<values().n;i++){const b=bounds(i),px=x+b.x*scale,pw=b.w*scale;paint(ctx,i,px,y,scale);ctx.save();ctx.strokeStyle=i===selected?'#c5e59a':'#ffffff35';ctx.lineWidth=i===selected?2:1;ctx.strokeRect(px,y,pw,oh);if(pw>=16){ctx.font='11px Arial';ctx.textAlign='center';ctx.fillStyle='#14221de6';ctx.fillRect(px,Math.max(0,y-19),pw,17);ctx.fillStyle=i===selected?'#c5e59a':'#d2dfd5';ctx.fillText(number(i),px+pw/2,Math.max(12,y-6));}ctx.restore();}}
 new ResizeObserver(render).observe($('stage'));
 function slice(index){const b=bounds(index),c=document.createElement('canvas');c.width=b.w;c.height=b.h;paint(c.getContext('2d'),index,0,0,1);return c;}
 function number(index){return $('order').value==='rtl'?values().n-index:index+1;}
-$('preview').onclick=e=>{if(!img||busy)return;const rect=e.currentTarget.getBoundingClientRect(),x=(e.clientX-rect.left)*view.W/rect.width,y=(e.clientY-rect.top)*view.H/rect.height;if(x<view.x||x>view.x+view.w||y<view.y||y>view.y+view.h)return;selected=Math.min(values().n-1,Math.floor((x-view.x)/view.w*values().n));const c=slice(selected),t=$('single');t.width=c.width;t.height=c.height;t.getContext('2d').drawImage(c,0,0);$('singleTitle').textContent='الشريحة '+number(selected);$('modal').showModal();};$('close').onclick=()=>$('modal').close();$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').close()};
+function openSingle(){if(!img||busy)return;const c=slice(selected),t=$('single');t.width=c.width;t.height=c.height;t.getContext('2d').drawImage(c,0,0);$('singleTitle').textContent='الشريحة '+number(selected)+' · '+c.width+' × '+c.height+' px';$('modal').showModal();}
+$('preview').onclick=e=>{if(!img||busy)return;const rect=e.currentTarget.getBoundingClientRect(),x=(e.clientX-rect.left)*view.W/rect.width,y=(e.clientY-rect.top)*view.H/rect.height;if(x<view.x||x>view.x+view.w||y<view.y||y>view.y+view.h)return;const sourceX=(x-view.x)/view.w*img.naturalWidth;let edge=0;for(let i=0;i<widths.length;i++){edge+=widths[i];if(sourceX<edge||i===widths.length-1){selected=i;break;}}syncSelection(false);render();};
+$('close').onclick=()=>$('modal').close();$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').close()};
 function blob(c){return new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error('encode')),'image/png'));}function save(data,name){const url=URL.createObjectURL(data),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
 $('saveSingle').onclick=async()=>{try{save(await blob($('single')),String(number(selected)).padStart(2,'0')+'.png')}catch{$('singleTitle').textContent='تعذّر الحفظ؛ جرّب صورة أصغر.'}};
 let galleryFiles=[],galleryURLs=[];
@@ -240,10 +251,6 @@ $('galleryShare').onclick=async()=>{
  catch(e){$('galleryStatus').textContent=e.name==='AbortError'?'أُلغيت العملية؛ يمكنك المحاولة مجددًا.':'تعذّرت المشاركة. جرّب Safari أو Chrome، أو احفظ كل صورة من معاينتها.';}
  finally{$('galleryShare').disabled=false;}
 };
-// ZIP STORE: standard CRC-32, local headers, central directory; no dependencies.
-const crcTable=Array.from({length:256},(_,n)=>{for(let k=0;k<8;k++)n=(n&1)?0xedb88320^(n>>>1):n>>>1;return n>>>0});function crc32(a){let c=0xffffffff;for(const v of a)c=crcTable[(c^v)&255]^(c>>>8);return (c^0xffffffff)>>>0;}
-function header(size){const a=new Uint8Array(size);return {a,v:new DataView(a.buffer)}}
-async function zip(files){let offset=0;const parts=[],central=[];for(const f of files){const name=new TextEncoder().encode(f.name),data=new Uint8Array(await f.blob.arrayBuffer()),crc=crc32(data),l=header(30);l.v.setUint32(0,0x04034b50,true);l.v.setUint16(4,20,true);l.v.setUint32(14,crc,true);l.v.setUint32(18,data.length,true);l.v.setUint32(22,data.length,true);l.v.setUint16(26,name.length,true);parts.push(l.a,name,data);const c=header(46);c.v.setUint32(0,0x02014b50,true);c.v.setUint16(4,20,true);c.v.setUint16(6,20,true);c.v.setUint32(16,crc,true);c.v.setUint32(20,data.length,true);c.v.setUint32(24,data.length,true);c.v.setUint16(28,name.length,true);c.v.setUint32(42,offset,true);central.push(c.a,name);offset+=30+name.length+data.length;}const len=central.reduce((s,a)=>s+a.length,0),end=header(22);end.v.setUint32(0,0x06054b50,true);end.v.setUint16(8,files.length,true);end.v.setUint16(10,files.length,true);end.v.setUint32(12,len,true);end.v.setUint32(16,offset,true);return new Blob([...parts,...central,end.a],{type:'application/zip'});}
-$('download').onclick=async()=>{if(!img||busy)return;busy=true;document.querySelectorAll('aside input,aside select,aside button').forEach(e=>e.disabled=true);try{const files=[];for(let i=0;i<values().n;i++){const index=$('order').value==='rtl'?values().n-1-i:i;$('message').textContent='جارٍ تجهيز الشريحة '+(i+1)+' من '+values().n;await new Promise(r=>requestAnimationFrame(r));const c=slice(index);files.push({name:String(i+1).padStart(2,'0')+'.png',blob:await blob(c)});c.width=c.height=0;}save(await zip(files),filename+'-strips.zip');$('message').textContent='تم تجهيز الشرائح ✓';}catch{$('message').textContent='تعذّر التصدير؛ جرّب صورة أصغر.';}finally{busy=false;document.querySelectorAll('aside input,aside select,aside button').forEach(e=>e.disabled=false);}};
-</script></body></html>
-
+</script>
+</body>
+</html>
