@@ -111,6 +111,7 @@ aside{gap:11px;overflow:auto}.width-field{gap:7px}.width-field>p{line-height:1.4
 .position-controls{display:flex;align-items:center;gap:8px}.position-controls label{font-size:12px;flex:1}.position-controls input{width:86px;direction:ltr}
 .width-field>p{font-size:11px}#widthSummary{font-variant-numeric:tabular-nums}#stripWidthN{width:76px}.stage{padding:44px 28px 32px}.badge{max-width:calc(100% - 25px);text-align:center;font-size:10px}
 @media(max-width:700px){.stage{padding:44px 24px 30px}.editor-tabs{top:8px}.editor-tabs button{font-size:11px;padding:6px 10px}.width-field>.position-controls{grid-column:1/-1}.width-field p{font-size:10px}.width-field{gap:5px}aside{gap:6px}.width-field .position-controls input{padding:5px}.badge{display:none}.app{min-height:580px}.width-field>p:not(#widthSummary){display:none}.width-actions button{padding:7px}.field{gap:5px}}
+.crop-options{display:flex;flex-direction:column;gap:5px;font-size:12px;grid-column:1/-1}.crop-options input{accent-color:#c5e59a}.width-field>p:not(#widthSummary){display:none}aside{gap:8px}
 </style>
 </head>
 <body>
@@ -175,8 +176,8 @@ aside{gap:11px;overflow:auto}.width-field{gap:7px}.width-field>p{line-height:1.4
 <label class="label" for="stripWidth">عرض الشريحة <span class="small">بكسل</span></label>
 <div class="controls"><input id="stripWidth" type="range" min="1" max="1000" value="100"><input id="stripWidthN" type="number" aria-label="عرض الشريحة بالبكسل" min="1" max="1000" value="100"></div>
 <div class="position-controls"><label for="stripStartN">البداية من اليسار <span class="small">بكسل</span></label><input id="stripStartN" type="number" aria-label="بداية الشريحة بالبكسل من يسار الصورة" min="0" max="1000" value="0"></div>
-<p class="small" id="widthSummary" aria-live="polite"></p>
-<p class="small">اسحب المقابض لتحديد البداية والنهاية. اسحب الوسط لنقل القص مع تثبيت العرض. كل شريحة مستقلة.</p>
+<div class="crop-options"><label><input type="checkbox" id="noOverlap" checked> منع تداخل الشرائح</label><label><input type="checkbox" id="linkedEdges" checked> ربط الأطراف دون فراغات</label></div><p class="small" id="widthSummary" aria-live="polite"></p>
+<p class="small">اسحب المقابض لتحديد البداية والنهاية. اسحب الوسط لنقل القص مع تثبيت العرض. يمكن تعطيل ربط الأطراف ومنع التداخل للقص الحر.</p>
 <div class="width-actions"><button class="secondary" id="equalWidths">إعادة تقسيم متساوٍ</button><button class="secondary" id="openStrip">فتح الشريحة</button></div>
 </div>
 <p class="hint-info">كل شريحة تقصّ منطقة مستقلة من الأصل. التباعد للمعاينة فقط ولا يغيّر أبعاد الملفات.</p>
@@ -218,7 +219,12 @@ aside{gap:11px;overflow:auto}.width-field{gap:7px}.width-field>p{line-height:1.4
 const $=id=>document.getElementById(id);let img=null,filename='strips',busy=false,selected=0,view={},crops=[],mode='edit',drag=null;
 const values=()=>({n:+$('count').value,gap:+$('gap').value/100});
 function resetWidths(){if(!img)return;const n=values().n,w=img.naturalWidth;crops=Array.from({length:n},(_,i)=>{const x=Math.round(i*w/n);return{x,w:Math.round((i+1)*w/n)-x};});selected=Math.min(selected,n-1);syncSelection();render();}
-function updateCrop(index,x,w){if(!img)return;w=Math.max(1,Math.min(img.naturalWidth,Math.round(w)));x=Math.max(0,Math.min(img.naturalWidth-w,Math.round(x)));crops[index]={x,w};syncSelection(false);render();}
+function updateCrop(index,x,w){if(!img)return;const old=crops[index],end=old.x+old.w,W=img.naturalWidth;let l=Math.round(x),r=Math.round(x+w);const prev=crops[index-1],next=crops[index+1],linked=$('linkedEdges').checked,locked=$('noOverlap').checked;
+if(linked){l=Math.max(prev?prev.x+1:0,Math.min(r-1,l));r=Math.min(next?next.x+next.w-1:W,Math.max(l+1,r));l=Math.min(l,r-1);if(prev){prev.w=l-prev.x;}if(next){const right=next.x+next.w;next.x=r;next.w=right-r;}}
+else if(locked){const low=prev?prev.x+prev.w:0,high=next?next.x:W;if(w===old.w){l=Math.max(low,Math.min(high-w,l));r=l+w;}else{l=Math.max(low,Math.min(high-1,l));r=Math.max(l+1,Math.min(high,r));}}
+l=Math.max(0,Math.min(W-1,l));r=Math.max(l+1,Math.min(W,r));crops[index]={x:l,w:r-l};syncSelection(false);render();}
+function normalizeCrops(){if(!img)return;const W=img.naturalWidth,n=crops.length;if($('linkedEdges').checked){const edges=[0];for(let i=1;i<n;i++)edges.push(Math.max(edges[i-1]+1,Math.min(W-(n-i),Math.round((crops[i-1].x+crops[i-1].w+crops[i].x)/2))));edges.push(W);crops=edges.slice(0,-1).map((x,i)=>({x,w:edges[i+1]-x}));}else if($('noOverlap').checked){let edge=0;crops=crops.map((b,i)=>{const x=Math.max(edge,Math.min(W-(n-i),b.x)),w=Math.max(1,Math.min(b.w,W-(n-i-1)-x));edge=x+w;return{x,w};});}syncSelection(false);render();}
+$('noOverlap').onchange=normalizeCrops;$('linkedEdges').onchange=normalizeCrops;
 function setWidth(value){if(!img||busy)return;const b=crops[selected],w=Math.max(1,Math.min(img.naturalWidth-b.x,Math.round(+value||1)));updateCrop(selected,b.x,w);}
 function setStart(value){if(!img||busy)return;const b=crops[selected];updateCrop(selected,+value||0,b.w);}
 function syncSelection(rebuild=true){if(!img)return;if(rebuild){$('selectedStrip').replaceChildren();for(let k=1;k<=values().n;k++){const i=$('order').value==='rtl'?values().n-k:k-1,o=document.createElement('option');o.value=i;o.textContent='الشريحة '+k;$('selectedStrip').append(o);}}
