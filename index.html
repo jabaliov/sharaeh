@@ -3,246 +3,399 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111b1b">
-<title>شرائح — قصّ الصورة بطريقتك</title>
+<meta name="theme-color" content="#101817">
+<meta name="description" content="حوّل صورتك إلى شرائح وبانوراما وتقريب وتفاصيل وتأثيرات لونية ولوحات تحريرية. معالجة محلية بالكامل.">
+<title>شرائح — ست طرق لصورتك</title>
 <style>
 *{box-sizing:border-box}
- :root{font-family:Tahoma,Arial,sans-serif;color:#eaf1ed;background:#101817;color-scheme:dark}
+ :root{font-family:Tahoma,Arial,sans-serif;color:#e9f0e9;background:#101817;color-scheme:dark}
 body{margin:0}
 button,input,select{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.45;cursor:wait}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #bfe18b;outline-offset:4px}
-.app{height:100dvh;min-height:480px;display:flex;flex-direction:column;padding:24px 36px;gap:22px;max-width:1600px;margin:auto}
+button,input,select{accent-color:#c5e59a}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #c5e59a;outline-offset:3px}
+button{border:0}
+button,select,input[type=number]{border-radius:10px}
+button{color:inherit}
+button:hover:not(:disabled){filter:brightness(1.12)}
+.app{height:100dvh;min-height:480px;max-width:1600px;margin:auto;padding:22px 30px;display:flex;flex-direction:column;gap:18px}
 header{display:flex;justify-content:space-between;align-items:center}
-.brand{font-size:24px;font-weight:bold;letter-spacing:-1px}
-.brand span{color:#bfe18b}
-.privacy{font-size:12px;color:#a5b7ad}
-.workspace{flex:1;min-height:0;display:flex;gap:24px}
-.stage{flex:1;min-width:0;position:relative;border:1px solid #2c3d36;border-radius:24px;background:radial-gradient(ellipse at center,#263930,#14201b);overflow:hidden;display:flex;align-items:center;justify-content:center;padding:24px}
-.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;width:100%;height:100%;border:1px dashed #66806d;border-radius:16px;cursor:pointer;text-align:center}
-.drop strong{font-size:clamp(18px,2.5vw,30px);font-weight:normal}
-.upload-icon{width:72px;height:72px;border-radius:22px;background:#bfe18b;color:#1a2c20;display:grid;place-items:center;font-size:36px}
-.hint{font-size:13px;color:#9eb1a3}
-.dragging{outline:2px solid #bfe18b;outline-offset:-4px}
-#preview{width:100%;height:100%;object-fit:contain;display:none;cursor:zoom-in}
-aside{width:290px;display:flex;flex-direction:column;gap:19px;padding:10px 0;overflow:auto}
-h1{font-size:22px;margin:0 0 7px}
-p{margin:0;color:#9fb1a5;font-size:13px;line-height:1.7}
-.field{display:flex;flex-direction:column;gap:10px}
-.label{display:flex;justify-content:space-between;font-size:13px;align-items:center}
-.controls{display:flex;gap:10px;align-items:center}
-input[type=range]{width:100%;accent-color:#bfe18b;cursor:pointer}
-input[type=number]{width:65px;background:#1e2b24;border:1px solid #405045;border-radius:8px;padding:8px;text-align:center}
-select{width:100%;background:#1e2b24;border:1px solid #405045;padding:10px;border-radius:10px}
-.small{font-size:11px;color:#9fb1a5}
-.divider{height:1px;background:#2c3d36}
-.primary{background:#c5e59a;color:#17251c;border:0;padding:15px;border-radius:12px;font-weight:bold;width:100%}
-.secondary{background:transparent;color:#cbd9cf;border:1px solid #3c5144;padding:10px;border-radius:10px}
-.actions{margin-top:auto;display:flex;flex-direction:column;gap:10px}
-#message{font-size:12px;min-height:16px;color:#d1e6b8}
-footer{display:flex;justify-content:space-between;color:#80978a;font-size:11px}
-.badge{position:absolute;bottom:14px;left:16px;font-size:11px;padding:7px 10px;border-radius:9px;background:#111c17d9;color:#b5c8ba;pointer-events:none}
-dialog{border:1px solid #49614f;border-radius:24px;background:#14201b;color:#eaf1ed;max-height:90dvh;max-width:90vw;padding:20px;text-align:center}
-dialog::backdrop{background:#000b}
-#single{display:block;max-height:67dvh;max-width:75vw;margin:12px auto}
-dialog button{margin:4px}
+.brand{font-size:23px;font-weight:bold}
+.brand b{color:#c5e59a}
+.privacy{font-size:11px;color:#a3b5a6}
+.layout{display:flex;gap:22px;flex:1;min-height:0}
+.stage{flex:1;min-width:0;border:1px solid #314738;background:radial-gradient(ellipse,#2a3c2e,#15221a);border-radius:22px;position:relative;overflow:hidden;display:flex;flex-direction:column;padding:20px}
+.stage.light{background:#edf0e9}
+.drop{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;border:1px dashed #6c886c;border-radius:15px;cursor:pointer;text-align:center}
+.drop strong{font-weight:normal;font-size:clamp(19px,2.5vw,30px)}
+.upload-icon{display:grid;place-items:center;width:64px;height:64px;border-radius:20px;background:#c5e59a;color:#192b1c;font-size:30px}
+.hint{font-size:12px;color:#9daf9d}
+.stage-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.stage-head strong{font-size:14px}
+.stage-head button{font-size:11px;padding:7px 10px}
+.stage.light .stage-head{color:#1c3022}
+.outputs{display:grid;gap:10px;flex:1;min-height:0;align-items:center;justify-content:center;direction:ltr}
+.output{min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:transparent;padding:0;height:100%;overflow:hidden}
+.output{justify-content:center}
+.output canvas{width:100%;height:100%;max-width:100%;max-height:calc(100% - 20px);object-fit:contain;min-height:0}
+.output span{font-size:10px;color:#a6b89e}
+.stage.light .output span{color:#405540}
+.stage-note{font-size:11px;text-align:center;color:#91a98e;margin:12px 0 0;min-height:14px}
+.stage.light .stage-note{color:#52654e}
+aside{width:300px;display:flex;flex-direction:column;gap:12px}
+.aside-title{font-size:14px;color:#aebfae}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mode{background:#1b2b20;border:1px solid #304737;padding:8px;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
+.mode[aria-pressed=true]{border-color:#c5e59a;background:#2a3e27;box-shadow:0 0 0 1px #c5e59a}
+.mode canvas{width:100%;height:65px;object-fit:contain}
+.mode span{font-size:11px}
+.primary{background:#c5e59a;color:#18281b;padding:13px;font-weight:bold}
+.secondary{background:#213328;border:1px solid #405942;padding:11px}
+.subtle{background:#1c2d22;border:1px solid #405642;padding:8px}
+.actions{display:flex;flex-direction:column;gap:8px;margin-top:auto}
+.downloads{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.downloads button{font-size:12px}
+#status{font-size:11px;min-height:16px;color:#c1d6ab;line-height:1.5}
+footer{display:flex;justify-content:space-between;font-size:10px;color:#819580}
 .hidden{display:none!important}
-@media(max-width:700px){.app{padding:16px;gap:12px;min-height:560px}
-.workspace{flex-direction:column;gap:12px}
-.stage{min-height:0;flex:1;border-radius:18px;padding:15px}
-aside{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow:visible;padding:0}
-.intro,.divider,.extra,.hint-info{display:none}
-.actions{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:10px}
-#message{grid-column:1/-1;min-height:0}
-.label{font-size:12px}
-.field{gap:5px}
-input[type=number]{padding:5px;width:53px}
-.primary{padding:12px}
+.empty aside,.empty .stage-head,.empty .stage-note,.empty .outputs{display:none}
+.empty .drop{display:flex}
+.drop{display:none}
+.empty .stage{padding:20px}
+.dragging{outline:2px solid #c5e59a;outline-offset:-4px}
+dialog{border:1px solid #4c674d;border-radius:20px;background:#14231a;color:#e9f0e9;width:min(520px,94vw);max-height:92dvh;padding:22px}
+dialog::backdrop{background:#000b}
+dialog h2{font-size:19px;margin:0}
+dialog p{font-size:12px;line-height:1.7;color:#b0c1ac;margin:10px 0}
+.dialog-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.close{background:#2c4230;padding:7px 12px;font-size:14px}
+.field{display:flex;flex-direction:column;gap:9px;margin:16px 0}
+.field label,.label{font-size:12px;display:flex;align-items:center;justify-content:space-between}
+.controls{display:flex;gap:10px;align-items:center}
+input[type=range]{width:100%}
+input[type=number]{width:65px;padding:7px;background:#213628;border:1px solid #405a43;text-align:center}
+select{background:#213628;border:1px solid #405a43;padding:10px;color:inherit;width:100%}
+input[type=color]{width:50px;height:34px;padding:0;border:0;background:transparent}
+.edit-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.result-wrap{height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0c150f;border-radius:12px;padding:8px}
+#settingsResult{width:100%;height:calc(100% - 18px);object-fit:contain;min-height:0}
+.source-wrap{height:180px;background:#0c150f;border-radius:12px;position:relative;overflow:hidden;display:grid;place-items:center}
+#source{width:100%;height:100%;object-fit:contain;touch-action:none;cursor:crosshair}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:#243b29;padding:8px;font-size:11px}
+.chip[aria-pressed=true]{background:#c5e59a;color:#192b1e}
+.modal-actions{display:flex;gap:8px;margin-top:16px}
+.modal-actions>*{flex:1}
+.single-wrap{height:60dvh;display:grid;place-items:center}
+#single{max-height:100%;max-width:100%;object-fit:contain}
+.gallery-grid{display:flex;gap:9px;overflow:auto;direction:ltr;padding:10px 0}
+.gallery-grid a{flex:0 0 60px;text-align:center;color:#c5e59a;font-size:11px;text-decoration:none}
+.gallery-grid img{width:60px;height:95px;object-fit:contain;background:#24392a}
+#shareReady{width:100%}
+.stat{font-variant-numeric:tabular-nums;color:#c5e59a}
+.small{font-size:10px;color:#a0b29b}
+.apply{width:100%;margin-top:12px}
+
+@media(max-width:700px){.app{padding:14px;gap:11px;min-height:540px}
+.layout{flex-direction:column;gap:11px}
+.stage{padding:12px;border-radius:17px}
+.brand{font-size:20px}
 .privacy{font-size:10px}
-.brand{font-size:21px}
-footer{font-size:10px}
-.upload-icon{width:55px;height:55px;font-size:28px}
-.badge{bottom:6px;left:8px}
-.drop{gap:15px}
+aside{width:100%;gap:8px}
+.aside-title{display:none}
+.modes{grid-template-columns:repeat(3,1fr);gap:6px}
+.mode{padding:5px;gap:4px;border-radius:9px}
+.mode canvas{height:35px}
+.mode span{font-size:10px}
+.actions{display:grid;grid-template-columns:auto 1fr;gap:6px}
+.downloads{gap:6px}
+.actions>.secondary{font-size:11px;padding:9px}
+.primary{padding:11px}
+.downloads button{font-size:11px}
+#status{grid-column:1/-1;min-height:0}
+footer{font-size:9px}
+.stage-head{margin-bottom:8px}
+.stage-note{font-size:10px;margin-top:8px}
+.outputs{gap:6px}
+.source-wrap,.result-wrap{height:155px}
+dialog{padding:17px}
+.field{margin:13px 0}
+.empty .stage{padding:15px}
 }
-@media(max-height:700px) and (min-width:701px){.app{padding:15px 25px;gap:12px}
-aside{gap:12px}
-.intro p{display:none}
-}
- 
-.empty aside{display:none}
-.intro{display:none}
-aside{overflow:visible;gap:16px}
-.upload-icon{font-family:Arial}
-.empty .stage{max-width:100%}
-@media(max-height:600px){.app{min-height:0;padding:10px;gap:8px}
+
+@media(max-height:620px){.app{padding:10px;gap:7px;min-height:0}
+footer{display:none}
+.mode canvas{height:28px}
+.stage-note{display:none}
 aside{gap:7px}
-.hint-info,footer{display:none}
-.field{gap:3px}
+.source-wrap,.result-wrap{height:110px}
 }
- #gallery{width:min(500px,92vw)}
-#gallery p{margin:10px 0}
-#galleryGrid{display:flex;gap:8px;overflow:auto;max-height:30dvh;padding:8px;direction:ltr}
-#galleryGrid a{flex:0 0 48px;color:#c5e59a;font-size:12px;text-decoration:none}
-#galleryGrid img{display:block;max-width:42px;height:100px;object-fit:contain;margin:0 auto 6px;background:repeating-conic-gradient(#304338 0% 25%,#24372c 0% 50%) 0/10px 10px}
-#galleryShare{margin:10px 0}
-.gallery-help{font-size:12px}
-@media(max-width:700px){.actions{grid-template-columns:1fr 1fr}
-.actions #replace{grid-column:1/-1;padding:7px}
-.actions button{font-size:12px}
-.actions{gap:6px}
-aside{gap:10px}
-}
- </style>
+
+</style>
 </head>
 <body>
 <main class="app empty" id="app">
 <header>
 <div class="brand">
-<span>▥</span> شرائح</div>
+<b>▥</b> شرائح</div>
 <div class="privacy">◉ صورك تبقى على جهازك</div>
 </header>
-<div class="workspace">
-<section class="stage" id="stage" aria-label="معاينة الصورة">
+<div class="layout">
+<section class="stage" id="stage" aria-label="معاينة النتيجة">
 <label class="drop" id="drop" for="file">
-<span class="upload-icon">
-<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-<path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/>
-</svg>
-</span>
+<span class="upload-icon">＋</span>
 <strong>أرفق الصورة أو اسحبها هنا</strong>
 <span class="hint">JPG · PNG · WebP</span>
 </label>
-<input class="hidden" id="file" type="file" accept="image/jpeg,image/png,image/webp">
-<canvas id="preview" aria-label="معاينة الشرائح؛ اضغط على شريحة لعرضها وحدها">
-</canvas>
-<span class="badge hidden" id="badge">اضغط على أي شريحة لفتحها</span>
+<input type="file" id="file" accept="image/jpeg,image/png,image/webp" hidden>
+<div class="stage-head">
+<strong id="effectName">شرائح X</strong>
+<div>
+<button id="theme" class="subtle" aria-label="تبديل خلفية المعاينة">خلفية فاتحة</button> <button id="replace" class="subtle">تغيير الصورة</button>
+</div>
+</div>
+<div class="outputs" id="outputs">
+</div>
+<p class="stage-note" id="stageNote">
+</p>
 </section>
 <aside>
-<div class="intro">
-<h1>صورة واحدة.<br>احتمالات كثيرة.</h1>
-<p>قسّمها إلى شرائح طولية، واضبط الأطراف كما تحب.</p>
+<div class="aside-title">اختر شكلًا لصورتك</div>
+<div class="modes" id="modes">
 </div>
-<div class="divider">
-</div>
-<div class="field">
-<label class="label" for="count">عدد الشرائح <span class="small">٢–٢٠</span>
-</label>
-<div class="controls">
-<input id="count" type="range" min="2" max="20" value="12">
-<input id="countN" type="number" aria-label="عدد الشرائح بدقة" min="2" max="20" value="12">
-</div>
-</div>
-<div class="field">
-<label class="label" for="curve">انحناء الأطراف <output id="curveOut">100%</output>
-</label>
-<div class="controls">
-<input id="curve" type="range" min="0" max="100" value="100">
-<input id="curveN" type="number" aria-label="نسبة انحناء الأطراف" min="0" max="100" value="100">
-</div>
-</div>
-<div class="field">
-<label class="label" for="gap">الفاصل بين الشرائح <output id="gapOut">16%</output>
-</label>
-<div class="controls">
-<input id="gap" type="range" min="0" max="50" value="16">
-<input id="gapN" type="number" aria-label="نسبة الفاصل" min="0" max="50" value="16">
-</div>
-</div>
-<div class="field">
-<label class="label" for="order">ترتيب الترقيم</label>
-<select id="order">
-<option value="rtl">من اليمين إلى اليسار</option>
-<option value="ltr">من اليسار إلى اليمين</option>
-</select>
-</div>
-<p class="hint-info">أطراف شفافة بصيغة PNG، مع الحفاظ على دقة الصورة الأصلية.</p>
 <div class="actions">
-<button class="primary" id="download" disabled>تحميل الشرائح ZIP ↓</button>
+<button class="secondary" id="settingsOpen">ضبط التأثير ⚙</button>
+<div class="downloads">
+<button class="primary" id="download" disabled>تحميل ZIP ↓</button>
 <button class="primary" id="galleryPrepare" disabled>حفظ في الاستديو</button>
-<button class="secondary" id="replace">تغيير الصورة</button>
-<div id="message" role="status" aria-live="polite">
+</div>
+<div id="status" role="status" aria-live="polite">
 </div>
 </div>
 </aside>
 </div>
 <footer>
-<span>قصّ محلي • دون رفع أو تسجيل</span>
+<span>٦ طرق لصورتك · معالجة محلية</span>
 <span id="dimensions">جاهز لإبداعك</span>
 </footer>
 </main>
-<dialog id="modal">
-<div id="singleTitle">
+<dialog id="settings">
+<div class="dialog-head">
+<h2 id="settingsTitle">ضبط التأثير</h2>
+<button class="close" id="settingsClose" aria-label="إغلاق الإعدادات">×</button>
 </div>
+<p id="focusHelp">
+</p>
+<div class="edit-preview" id="editPreview">
+<div class="source-wrap" id="sourceWrap">
+<canvas id="source" aria-label="الصورة الأصلية؛ المس لاختيار نقطة الاهتمام أو اللون واسحب لتغيير موضع القص">
+</canvas>
+</div>
+<div class="result-wrap">
+<canvas id="settingsResult" aria-label="معاينة فورية للتعديل">
+</canvas>
+<span class="small">معاينة فورية</span>
+</div>
+</div>
+<div class="chips" id="detailPoints">
+</div>
+<div class="field" id="countField">
+<label for="count">
+<span id="countLabel">عدد الشرائح</span>
+<output id="countOut" class="stat">12</output>
+</label>
+<div class="controls">
+<input type="range" id="count" min="2" max="20" value="12">
+<input type="number" id="countN" min="2" max="20" value="12" aria-label="العدد بدقة">
+</div>
+</div>
+<div class="field" id="fitField">
+<label for="fit">تأطير الصورة</label>
+<select id="fit">
+<option value="cover">ملء الإطار</option>
+<option value="contain">إظهار الصورة كاملة</option>
+</select>
+</div>
+<div class="field" id="ratioField">
+<label for="ratio">شكل الإطار</label>
+<select id="ratio">
+<option value="0.8">طولي 4:5</option>
+<option value="1">مربع 1:1</option>
+<option value="1.7777777778">عرضي 16:9</option>
+<option value="source">نسبة الصورة الأصلية</option>
+</select>
+</div>
+<div class="field" id="zoomField">
+<label for="zoom">
+<span id="zoomLabel">قوة التقريب</span>
+<output id="zoomOut" class="stat">3×</output>
+</label>
+<input type="range" id="zoom" min="1" max="5" step="0.1" value="3">
+</div>
+<div class="field" id="colorField">
+<label for="color">اللون المحتفظ به <input type="color" id="color" value="#d29940">
+</label>
+<label for="tolerance">مدى الألوان <output id="toleranceOut" class="stat">30</output>
+</label>
+<input type="range" id="tolerance" min="5" max="100" value="30">
+</div>
+<div class="field" id="templateField">
+<label for="template">قالب اللوحة</label>
+<select id="template">
+<option value="triptych">لوحة وتفصيلان</option>
+<option value="magazine">صفحة مجلة</option>
+<option value="grid">أربع نوافذ</option>
+</select>
+</div>
+<div class="field" id="backgroundField">
+<label for="background">لون المساحات حول الصورة <input type="color" id="background" value="#eee9df">
+</label>
+</div>
+<div class="field" id="orderField">
+<label for="order">ترتيب الملفات</label>
+<select id="order">
+<option value="rtl">من اليمين إلى اليسار</option>
+<option value="ltr">من اليسار إلى اليمين</option>
+</select>
+</div>
+<div class="field" id="curveField">
+<label for="curve">انحناء داخل الملف <output id="curveOut" class="stat">0%</output>
+</label>
+<input type="range" id="curve" min="0" max="100" value="0">
+<span class="small">للنشر في X اتركه صفرًا؛ الواجهة تصنع الانحناء.</span>
+</div>
+<div class="field" id="gapField">
+<label for="gap">قصّ من جانبي الشريحة <output id="gapOut" class="stat">0%</output>
+</label>
+<input type="range" id="gap" min="0" max="50" value="0">
+</div>
+<button class="subtle" id="reset">إعادة ضبط هذا التأثير</button>
+<button class="primary apply" id="settingsApply">عرض النتيجة</button>
+<p class="small" id="qualityNote">
+</p>
+</dialog>
+<dialog id="singleDialog">
+<div class="dialog-head">
+<h2 id="singleTitle">الصورة</h2>
+<button class="close" id="singleClose" aria-label="إغلاق الصورة">×</button>
+</div>
+<div class="single-wrap">
 <canvas id="single">
 </canvas>
-<button class="primary" id="saveSingle">تحميل هذه الشريحة</button>
-<button class="secondary" id="close">إغلاق</button>
+</div>
+<button class="primary apply" id="singleSave">تحميل هذه الصورة</button>
 </dialog>
 <dialog id="gallery">
-<h2 style="font-size:20px;margin:4px">حفظ الصور في الاستديو</h2>
-<p id="galleryHelp" class="gallery-help">
-</p>
-<div id="galleryGrid">
+<div class="dialog-head">
+<h2>حفظ الصور في الاستديو</h2>
+<button class="close" id="galleryClose" aria-label="إغلاق الحفظ">×</button>
 </div>
-<button class="primary" id="galleryShare">فتح خيارات حفظ الصور</button>
-<p id="galleryStatus" role="status" aria-live="polite">
+<p id="galleryHelp">
 </p>
-<button class="secondary" id="galleryClose">إغلاق</button>
-</dialog><script>
-
+<div class="gallery-grid" id="galleryGrid">
+</div>
+<button class="primary" id="shareReady">فتح خيارات حفظ الصور</button>
+<p id="shareStatus" role="status" aria-live="polite">
+</p>
+</dialog>
+<script>
 'use strict';
-const $=id=>document.getElementById(id);let img=null,filename='strips',busy=false,selected=0,view={};
-const values=()=>({n:+$('count').value,curve:+$('curve').value/100,gap:+$('gap').value/100});
-for(const id of ['count','curve','gap'])for(const suffix of ['', 'N'])$(id+suffix).addEventListener('input',e=>{const a=$(id),v=Math.max(+a.min,Math.min(+a.max,Math.round(+e.target.value||+a.min)));a.value=$(id+'N').value=v;if(id!=='count')$(id+'Out').textContent=v+'%';render();});
-$('order').onchange=render;$('replace').onclick=()=>$('file').click();$('file').onchange=e=>load(e.target.files[0]);
-for(const ev of ['dragenter','dragover'])$('stage').addEventListener(ev,e=>{e.preventDefault();$('stage').classList.add('dragging')});for(const ev of ['dragleave','drop'])$('stage').addEventListener(ev,e=>{e.preventDefault();$('stage').classList.remove('dragging')});$('stage').addEventListener('drop',e=>load(e.dataTransfer.files[0]));
-async function load(file){if(!file||busy)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ $('message').textContent='اختر صورة JPG أو PNG أو WebP.';return;}const url=URL.createObjectURL(file);try{const next=new Image();next.src=url;await next.decode();if(next.naturalWidth<20)throw Error('small');if(next.naturalWidth*next.naturalHeight>50000000)throw Error('large');img=next;$('app').classList.remove('empty');filename=file.name.replace(/\.[^.]+$/,'');$('drop').classList.add('hidden');$('preview').style.display='block';$('badge').classList.remove('hidden');$('download').disabled=false;$('galleryPrepare').disabled=false;$('dimensions').textContent=img.naturalWidth+' × '+img.naturalHeight+' px';$('message').textContent='';render();}catch(e){$('message').textContent=e.message==='large'?'الصورة كبيرة جدًا؛ اختر صورة أقل من ٥٠ مليون بكسل.':'تعذّر قراءة الصورة؛ جرّب صورة أخرى.';}finally{URL.revokeObjectURL(url);$('file').value='';}}
-function bounds(index){const {n,gap}=values(),w=img.naturalWidth;const l=Math.round(index*w/n),r=Math.round((index+1)*w/n),inset=Math.round((r-l)*gap/2);return {x:l+inset,w:Math.max(1,r-l-2*inset),h:img.naturalHeight};}
-function path(ctx,x,y,w,h,r){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
-function paint(ctx,index,x,y,scale){const b=bounds(index),w=b.w*scale,h=b.h*scale;ctx.save();path(ctx,x,y,w,h,w/2*values().curve);ctx.clip();ctx.drawImage(img,b.x,0,b.w,b.h,x,y,w,h);ctx.restore();}
-function render(){if(!img)return;const c=$('preview'),rect=$('stage').getBoundingClientRect(),W=Math.max(1,rect.width-48),H=Math.max(1,rect.height-48),dpr=Math.min(devicePixelRatio||1,2);c.width=W*dpr;c.height=H*dpr;const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const scale=Math.min(W/img.naturalWidth,H/img.naturalHeight),ow=img.naturalWidth*scale,oh=img.naturalHeight*scale,x=(W-ow)/2,y=(H-oh)/2;view={x,y,w:ow,h:oh,W,H};for(let i=0;i<values().n;i++)paint(ctx,i,x+bounds(i).x*scale,y,scale);}
-new ResizeObserver(render).observe($('stage'));
-function slice(index){const b=bounds(index),c=document.createElement('canvas');c.width=b.w;c.height=b.h;paint(c.getContext('2d'),index,0,0,1);return c;}
-function number(index){return $('order').value==='rtl'?values().n-index:index+1;}
-$('preview').onclick=e=>{if(!img||busy)return;const rect=e.currentTarget.getBoundingClientRect(),x=(e.clientX-rect.left)*view.W/rect.width,y=(e.clientY-rect.top)*view.H/rect.height;if(x<view.x||x>view.x+view.w||y<view.y||y>view.y+view.h)return;selected=Math.min(values().n-1,Math.floor((x-view.x)/view.w*values().n));const c=slice(selected),t=$('single');t.width=c.width;t.height=c.height;t.getContext('2d').drawImage(c,0,0);$('singleTitle').textContent='الشريحة '+number(selected);$('modal').showModal();};$('close').onclick=()=>$('modal').close();$('modal').onclick=e=>{if(e.target===$('modal'))$('modal').close()};
-function blob(c){return new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error('encode')),'image/png'));}function save(data,name){const url=URL.createObjectURL(data),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
-$('saveSingle').onclick=async()=>{try{save(await blob($('single')),String(number(selected)).padStart(2,'0')+'.png')}catch{$('singleTitle').textContent='تعذّر الحفظ؛ جرّب صورة أصغر.'}};
-let galleryFiles=[],galleryURLs=[];
+const $=id=>document.getElementById(id);
+const MODES=[['strips','شرائح X'],['panorama','بانوراما بالسحب'],['zoom','اقترب تدريجيًا'],['details','الصورة وتفاصيلها'],['color','لون وسط الرمادي'],['editorial','لوحة تحريرية']];
+const defaults={count:12,fit:'cover',ratio:'0.8',zoom:3,color:'#d29940',tolerance:30,template:'triptych',background:'#eee9df',order:'rtl',curve:0,gap:0};
+const options={};
+for(const [id] of MODES)options[id]={...defaults,count:id==='strips'?12:id==='details'?3:4,fit:id==='zoom'||id==='details'?'contain':'cover',focus:{x:.5,y:.5},points:[{x:.3,y:.35},{x:.7,y:.6},{x:.5,y:.75}],active:0};
+let mode='strips',image=null,filename='sharaeh',busy=false,renderFrame=0,singleIndex=0,sourceRect=null,galleryFiles=[],galleryURLs=[];
+const opt=()=>options[mode];
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+function canvas(w,h){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c;}
+function imageSize(){return {w:image.naturalWidth||image.width,h:image.naturalHeight||image.height};}
+function ratio(o){return o.ratio==='source'?imageSize().w/imageSize().h:+o.ratio;}
+function countFor(m,o){return m==='color'||m==='editorial'?1:m==='details'?o.count+1:o.count;}
+function cropFor(r,focus,z=1){const {w,h}=imageSize();let cw=Math.min(w,h*r)/z,ch=cw/r;return {x:clamp(focus.x*w-cw/2,0,w-cw),y:clamp(focus.y*h-ch/2,0,h-ch),w:cw,h:ch};}
+function cropRect(m,i,o){const {w,h}=imageSize(),r=ratio(o);
+ if(m==='strips'||m==='panorama'){const j=o.order==='rtl'?o.count-1-i:i,l=Math.round(j*w/o.count),right=Math.round((j+1)*w/o.count),inset=m==='strips'?Math.round((right-l)*o.gap/200):0;return {x:l+inset,y:0,w:Math.max(1,right-l-2*inset),h};}
+ if(m==='zoom'&&i===0)return {x:0,y:0,w,h};
+ if(m==='zoom')return cropFor(r,o.focus,1+(o.zoom-1)*i/Math.max(1,o.count-1));
+ if(m==='details'&&i>0)return cropFor(r,o.points[(i-1)%o.points.length],o.zoom);
+ return {x:0,y:0,w,h};
+}
+function dimensions(m,i,o,maxEdge){const b=cropRect(m,i,o);let w,h;
+ if(m==='strips'||m==='color'){w=b.w;h=b.h;}
+ else if(m==='editorial'){w=Math.min(1800,imageSize().w);h=w*(o.template==='magazine'?1.25:.75);const boxes=editorialBoxes(w,h,o);let scale=1;boxes.forEach((box,j)=>{const src=j?cropFor(box[2]/box[3],o.points[(j-1)%o.points.length],o.zoom):imageSize();scale=Math.min(scale,src.w/box[2],src.h/box[3]);});w*=scale;h*=scale;}
+ else{const r=ratio(o);w=Math.min(b.w,b.h*r);h=w/r;}
+ const s=Math.min(1,maxEdge/Math.max(w,h));return {w:Math.max(1,Math.round(w*s)),h:Math.max(1,Math.round(h*s))};
+}
+function drawFit(ctx,b,box,fit,focus,background){ctx.fillStyle=background;ctx.fillRect(box.x,box.y,box.w,box.h);let sx=b.x,sy=b.y,sw=b.w,sh=b.h,dx=box.x,dy=box.y,dw=box.w,dh=box.h;
+ if(fit==='cover'){const r=dw/dh;if(sw/sh>r){const nw=sh*r;sx+=clamp(focus.x)* (sw-nw);sw=nw;}else{const nh=sw/r;sy+=clamp(focus.y)*(sh-nh);sh=nh;}}
+ else{const s=Math.min(dw/sw,dh/sh);dw=sw*s;dh=sh*s;dx+=(box.w-dw)/2;dy+=(box.h-dh)/2;}
+ ctx.drawImage(image,sx,sy,sw,sh,dx,dy,dw,dh);
+}
+function roundedPath(ctx,w,h,r){r=Math.min(w/2,h/2,r);ctx.beginPath();ctx.moveTo(r,0);ctx.lineTo(w-r,0);ctx.quadraticCurveTo(w,0,w,r);ctx.lineTo(w,h-r);ctx.quadraticCurveTo(w,h,w-r,h);ctx.lineTo(r,h);ctx.quadraticCurveTo(0,h,0,h-r);ctx.lineTo(0,r);ctx.quadraticCurveTo(0,0,r,0);ctx.closePath();}
+function hue(r,g,b){r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;let h=0;if(d)h=max===r?((g-b)/d)%6:max===g?(b-r)/d+2:(r-g)/d+4;return {h:(h*60+360)%360,s:max?d/max:0};}
+function selectiveColor(ctx,w,h,o){const d=ctx.getImageData(0,0,w,h),a=d.data,hex=o.color.slice(1),rgb=[0,2,4].map(p=>parseInt(hex.slice(p,p+2),16)),target=hue(...rgb),spread=o.tolerance*1.8;
+ for(let p=0;p<a.length;p+=4){const current=hue(a[p],a[p+1],a[p+2]);let keep;
+ if(target.s<.12){const dist=Math.hypot(a[p]-rgb[0],a[p+1]-rgb[1],a[p+2]-rgb[2]);keep=clamp((o.tolerance*3-dist)/20);}
+ else{const delta=Math.abs(current.h-target.h),distance=Math.min(delta,360-delta);keep=clamp((spread-distance)/12)*clamp(current.s/.18);}
+ const grey=.2126*a[p]+.7152*a[p+1]+.0722*a[p+2];for(let c=0;c<3;c++)a[p+c]=grey+(a[p+c]-grey)*keep;}
+ ctx.putImageData(d,0,0);
+}
+function renderOutput(m,i,o,maxEdge=2200){const dim=dimensions(m,i,o,maxEdge),c=canvas(dim.w,dim.h),ctx=c.getContext('2d',{willReadFrequently:m==='color'}),w=c.width,h=c.height,b=cropRect(m,i,o);ctx.imageSmoothingQuality='high';
+ if(m==='strips'){ctx.save();roundedPath(ctx,w,h,w*.5*o.curve/100);ctx.clip();ctx.drawImage(image,b.x,b.y,b.w,b.h,0,0,w,h);ctx.restore();}
+ else if(m==='editorial')drawEditorial(ctx,w,h,o);
+ else if(m==='color'){ctx.drawImage(image,0,0,w,h);selectiveColor(ctx,w,h,o);}
+ else{drawFit(ctx,b,{x:0,y:0,w,h},(m==='zoom'&&i>0)||(m==='details'&&i>0)?'cover':o.fit,o.focus,o.background);}
+ return c;
+}
+function editorialBoxes(w,h,o){const pad=Math.max(4,w*.024),g=pad;let boxes;
+ if(o.template==='grid'){const bw=(w-3*pad)/2,bh=(h-3*pad)/2;boxes=[[pad,pad,bw,bh],[2*pad+bw,pad,bw,bh],[pad,2*pad+bh,bw,bh],[2*pad+bw,2*pad+bh,bw,bh]];}
+ else if(o.template==='magazine'){const bh=(h-3*pad)*.65,bw=(w-3*pad)/2;boxes=[[pad,pad,w-2*pad,bh],[pad,2*pad+bh,bw,h-3*pad-bh],[2*pad+bw,2*pad+bh,bw,h-3*pad-bh]];}
+ else{const main=(w-3*pad)*.65,small=w-3*pad-main,bh=(h-3*pad)/2;boxes=[[pad,pad,main,h-2*pad],[2*pad+main,pad,small,bh],[2*pad+main,2*pad+bh,small,bh]];}
+ return boxes;
+}
+function drawEditorial(ctx,w,h,o){const full={x:0,y:0,...imageSize()},boxes=editorialBoxes(w,h,o);ctx.fillStyle=o.background;ctx.fillRect(0,0,w,h);
+ boxes.forEach((v,i)=>{const b=i?cropFor(v[2]/v[3],o.points[(i-1)%o.points.length],o.zoom):full;drawFit(ctx,b,{x:v[0],y:v[1],w:v[2],h:v[3]},i?'cover':o.fit,o.focus,o.background);});
+}
+function requestRender(){cancelAnimationFrame(renderFrame);renderFrame=requestAnimationFrame(render);}
+function setStatus(s){$('status').textContent=s;}
+function render(){if(!image)return;const o=opt(),n=countFor(mode,o),list=$('outputs');list.replaceChildren();const narrow=mode==='strips';const cols=narrow?n:Math.min(n,n>8?5:n>4?4:n>2?3:2),rows=narrow?1:Math.ceil(n/cols);list.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;list.style.gridTemplateRows=`repeat(${rows},minmax(0,1fr))`;
+ for(let i=0;i<n;i++){const button=document.createElement('button');button.className='output';button.setAttribute('aria-label','فتح الصورة '+(i+1));const c=renderOutput(mode,i,o,mode==='color'||mode==='editorial'?1000:narrow?700:420),label=document.createElement('span');label.textContent=String(i+1).padStart(2,'0');button.append(c,label);button.onclick=()=>openSingle(i);list.append(button);}
+ $('effectName').textContent=MODES.find(m=>m[0]===mode)[1];$('stageNote').textContent=mode==='strips'?'معاينة الملفات؛ شكل عرض X قد يختلف. اضغط شريحة لفتحها.':mode==='panorama'?'مقاطع متصلة دون حذف فواصل؛ ترتيب الرفع مهم.':'اضغط أي نتيجة لفتحها وحدها. اختر «ضبط التأثير» للتعديل.';
+ $('download').textContent=n===1?'تحميل الصورة ↓':'تحميل ZIP ↓';
+}
+function renderModePreviews(){if(!image)return;for(const [id] of MODES){const c=renderOutput(id,id==='details'?1:0,options[id],180),thumb=$('thumb-'+id),ctx=thumb.getContext('2d');thumb.width=180;thumb.height=90;ctx.clearRect(0,0,180,90);const s=Math.min(180/c.width,90/c.height);if(id==='strips'||id==='panorama'){const {w,h}=imageSize();for(let i=0;i<5;i++){const sw=w/5,dx=i*35;ctx.drawImage(image,i*sw,0,sw,h,dx,0,30,90);}}else ctx.drawImage(c,(180-c.width*s)/2,(90-c.height*s)/2,c.width*s,c.height*s);c.width=c.height=0;}}
+for(const [id,label] of MODES){const b=document.createElement('button');b.className='mode';b.id='mode-'+id;b.setAttribute('aria-pressed',String(id===mode));const c=canvas(180,90);c.id='thumb-'+id;const text=document.createElement('span');text.textContent=label;b.append(c,text);b.onclick=()=>{if(busy)return;mode=id;document.querySelectorAll('.mode').forEach(x=>x.setAttribute('aria-pressed',String(x.id==='mode-'+mode)));syncSettings();requestRender();};$('modes').append(b);}
+async function load(file){if(!file||busy)return;if(!/^image\/(jpeg|png|webp)$/.test(file.type)){alert('اختر صورة JPG أو PNG أو WebP.');return;}const url=URL.createObjectURL(file);try{const next=new Image();next.src=url;await next.decode();if(next.naturalWidth*next.naturalHeight>50000000)throw Error('large');if(Math.min(next.naturalWidth,next.naturalHeight)<20)throw Error('small');image=next;filename=file.name.replace(/\.[^.]+$/,'');for(const [id] of MODES){options[id].focus={x:.5,y:.5};options[id].points=[{x:.3,y:.35},{x:.7,y:.6},{x:.5,y:.75}];}const small=canvas(1,1);small.getContext('2d').drawImage(image,0,0,1,1);const p=small.getContext('2d').getImageData(0,0,1,1).data;options.color.color='#'+[...p].slice(0,3).map(v=>v.toString(16).padStart(2,'0')).join('');$('app').classList.remove('empty');$('download').disabled=$('galleryPrepare').disabled=false;$('dimensions').textContent=next.naturalWidth+' × '+next.naturalHeight+' px';setStatus('');syncSettings();renderModePreviews();requestRender();}catch(e){alert(e.message==='large'?'اختر صورة أقل من ٥٠ مليون بكسل.':'تعذّر قراءة الصورة؛ جرّب صورة أخرى.');}finally{URL.revokeObjectURL(url);$('file').value='';}}
+$('file').onchange=e=>load(e.target.files[0]);$('replace').onclick=()=>$('file').click();
+for(const ev of ['dragenter','dragover'])$('stage').addEventListener(ev,e=>{e.preventDefault();$('stage').classList.add('dragging');});for(const ev of ['dragleave','drop'])$('stage').addEventListener(ev,e=>{e.preventDefault();$('stage').classList.remove('dragging');});$('stage').addEventListener('drop',e=>load(e.dataTransfer.files[0]));
+$('theme').onclick=()=>{const light=$('stage').classList.toggle('light');$('theme').textContent=light?'خلفية داكنة':'خلفية فاتحة';};
+const fieldModes={count:['strips','panorama','zoom','details'],fit:['panorama','zoom','details','editorial'],ratio:['panorama','zoom','details'],zoom:['zoom','details','editorial'],color:['color'],template:['editorial'],background:['panorama','details','editorial'],order:['strips','panorama'],curve:['strips'],gap:['strips']};
+function syncSettings(){const o=opt();$('settingsTitle').textContent=MODES.find(m=>m[0]===mode)[1];for(const [id,modes] of Object.entries(fieldModes))$(id+'Field').classList.toggle('hidden',!modes.includes(mode));for(const key of Object.keys(defaults))$(key).value=o[key];$('count').max=$('countN').max=mode==='strips'?20:mode==='details'?6:8;$('count').min=$('countN').min=mode==='details'?1:2;$('countN').value=o.count;$('countOut').textContent=o.count;$('zoomOut').textContent=o.zoom+'×';$('curveOut').textContent=o.curve+'%';$('gapOut').textContent=o.gap+'%';$('toleranceOut').textContent=o.tolerance;$('countLabel').textContent=mode==='details'?'عدد التفاصيل':mode==='zoom'?'عدد مراحل التقريب':'عدد المقاطع';$('focusHelp').textContent=mode==='color'?'المس اللون الذي تريد الاحتفاظ به، أو اختره من منتقي الألوان.':mode==='details'||mode==='editorial'?'اختر تفصيلًا من الأزرار ثم المس موقعه في الصورة. اسحب لتعديل موضعه.':mode==='strips'?'قصّ مستطيل افتراضيًا؛ الانحناء والفواصل داخل الملف اختياريان.':'المس الصورة أو اسحب لتحديد نقطة الاهتمام وموضع القص.';$('editPreview').classList.toggle('hidden',mode==='strips');$('qualityNote').textContent='التصدير يحافظ على النسبة ولا يكبّر التفاصيل فوق دقتها الأصلية؛ الحد الأقصى للضلع ٢٢٠٠ بكسل.';renderPointChips();drawSource();}
+function renderPointChips(){const p=$('detailPoints');p.replaceChildren();if(mode!=='details'&&mode!=='editorial')return;const o=opt(),n=mode==='details'?o.count:o.template==='grid'?3:2;while(o.points.length<n)o.points.push({x:.5,y:.5});o.active=Math.min(o.active,n-1);for(let i=0;i<n;i++){const b=document.createElement('button');b.className='chip';b.textContent='تفصيل '+(i+1);b.setAttribute('aria-pressed',String(o.active===i));b.onclick=()=>{o.active=i;renderPointChips();drawSource();};p.append(b);}}
+for(const key of Object.keys(defaults))$(key).addEventListener('input',e=>{const o=opt();o[key]=['count','zoom','tolerance','curve','gap'].includes(key)?+e.target.value:e.target.value;if(key==='count'){o.count=Math.round(clamp(o.count,+$('count').min,+$('count').max));$('countN').value=o.count;$('countOut').textContent=o.count;renderPointChips();}if(key==='zoom')$('zoomOut').textContent=o.zoom+'×';if(key==='tolerance')$('toleranceOut').textContent=o.tolerance;for(const k of ['curve','gap'])if(key===k)$(k+'Out').textContent=o[k]+'%';if(key==='template')renderPointChips();drawSource();requestRender();});
+$('countN').oninput=e=>{const o=opt();o.count=Math.round(clamp(+e.target.value||1,+$('count').min,+$('count').max));$('count').value=o.count;$('countOut').textContent=o.count;renderPointChips();requestRender();};
+function drawSource(){if(!image||!$('settings').open||mode==='strips')return;const resultIndex=mode==='zoom'?opt().count-1:mode==='details'?opt().active+1:0,rendered=renderOutput(mode,resultIndex,opt(),380),result=$('settingsResult');result.width=rendered.width;result.height=rendered.height;result.getContext('2d').drawImage(rendered,0,0);rendered.width=rendered.height=0;const c=$('source'),rect=$('sourceWrap').getBoundingClientRect(),w=Math.max(1,rect.width),h=Math.max(1,rect.height);c.width=w*2;c.height=h*2;const ctx=c.getContext('2d');ctx.scale(2,2);const s=Math.min(w/imageSize().w,h/imageSize().h),dw=imageSize().w*s,dh=imageSize().h*s,x=(w-dw)/2,y=(h-dh)/2;ctx.drawImage(image,x,y,dw,dh);sourceRect={x,y,w:dw,h:dh,W:w,H:h};const o=opt();if(mode==='color')return;const points=mode==='details'||mode==='editorial'?o.points.slice(0,mode==='details'?o.count:o.template==='grid'?3:2):[o.focus];points.forEach((p,i)=>{const px=x+p.x*dw,py=y+p.y*dh;ctx.strokeStyle='#c5e59a';ctx.lineWidth=2;ctx.beginPath();ctx.arc(px,py,i===o.active?9:6,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#101817';ctx.fillRect(px+9,py-9,16,16);ctx.fillStyle='#c5e59a';ctx.font='11px Arial';ctx.fillText(String(i+1),px+13,py+3);});}
+let dragging=false;function pickSource(e){if(!image||!sourceRect)return;const r=$('source').getBoundingClientRect(),v=sourceRect,x=(e.clientX-r.left)*v.W/r.width,y=(e.clientY-r.top)*v.H/r.height;if(x<v.x||y<v.y||x>v.x+v.w||y>v.y+v.h)return;const p={x:clamp((x-v.x)/v.w),y:clamp((y-v.y)/v.h)},o=opt();if(mode==='color'){const c=canvas(1,1),ctx=c.getContext('2d');ctx.drawImage(image,Math.min(imageSize().w-1,Math.floor(p.x*imageSize().w)),Math.min(imageSize().h-1,Math.floor(p.y*imageSize().h)),1,1,0,0,1,1);const d=ctx.getImageData(0,0,1,1).data;o.color='#'+[...d].slice(0,3).map(v=>v.toString(16).padStart(2,'0')).join('');$('color').value=o.color;}else if(mode==='details'||mode==='editorial')o.points[o.active]=p;else o.focus=p;drawSource();requestRender();}
+$('source').onpointerdown=e=>{dragging=true;$('source').setPointerCapture(e.pointerId);pickSource(e);};$('source').onpointermove=e=>{if(dragging)pickSource(e);};$('source').onpointerup=$('source').onpointercancel=()=>{dragging=false;};
+$('settingsOpen').onclick=()=>{if(!image||busy)return;$('settings').showModal();syncSettings();};$('settingsClose').onclick=$('settingsApply').onclick=()=>$('settings').close();$('settings').addEventListener('close',()=>{renderModePreviews();requestRender();});$('reset').onclick=()=>{const id=mode;options[id]={...defaults,count:id==='strips'?12:id==='details'?3:4,fit:id==='zoom'||id==='details'?'contain':'cover',focus:{x:.5,y:.5},points:[{x:.3,y:.35},{x:.7,y:.6},{x:.5,y:.75}],active:0};syncSettings();requestRender();};
+function openSingle(i){if(busy)return;singleIndex=i;const c=renderOutput(mode,i,opt(),1500),t=$('single');t.width=c.width;t.height=c.height;t.getContext('2d').drawImage(c,0,0);$('singleTitle').textContent='الصورة '+(i+1);$('singleDialog').showModal();}
+$('singleClose').onclick=()=>$('singleDialog').close();
+function toBlob(c){return new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error('encode')),'image/png'));}
+function save(b,name){const url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+$('singleSave').onclick=async()=>{try{const c=renderOutput(mode,singleIndex,opt());save(await toBlob(c),String(singleIndex+1).padStart(2,'0')+'.png');c.width=c.height=0;}catch{$('singleTitle').textContent='تعذّر الحفظ؛ جرّب صورة أصغر.';}};
+function lock(value){busy=value;document.querySelectorAll('aside button,#replace,#settingsOpen').forEach(e=>e.disabled=value);}
+async function exportFiles(){const files=[],o=structuredClone(opt()),m=mode,n=countFor(m,o);for(let i=0;i<n;i++){setStatus('جارٍ تجهيز الصورة '+(i+1)+' / '+n);await new Promise(r=>requestAnimationFrame(r));const c=renderOutput(m,i,o);try{files.push(new File([await toBlob(c)],String(i+1).padStart(2,'0')+'.png',{type:'image/png'}));}finally{c.width=c.height=0;}}return files;}
+$('download').onclick=async()=>{if(!image||busy)return;lock(true);try{const files=await exportFiles();if(files.length===1)save(files[0],filename+'-'+mode+'.png');else save(await zip(files.map(f=>({name:f.name,blob:f}))),filename+'-'+mode+'.zip');setStatus('تم تجهيز التنزيل ✓');}catch{setStatus('تعذّر التصدير؛ جرّب صورة أصغر.');}finally{lock(false);}};
 function clearGallery(){galleryURLs.forEach(url=>URL.revokeObjectURL(url));galleryURLs=[];galleryFiles=[];$('galleryGrid').replaceChildren();}
-$('galleryClose').onclick=()=>$('gallery').close();
-$('gallery').addEventListener('close',clearGallery);
-$('galleryPrepare').onclick=async()=>{
- if(!img||busy)return;
- busy=true;document.querySelectorAll('aside input,aside select,aside button').forEach(e=>e.disabled=true);clearGallery();
- try{
-  for(let i=0;i<values().n;i++){
-   $('message').textContent='جارٍ تجهيز الصور للاستديو '+(i+1)+' / '+values().n;
-   await new Promise(r=>requestAnimationFrame(r));
-   const index=$('order').value==='rtl'?values().n-1-i:i,c=slice(index),b=await blob(c);
-   galleryFiles.push(new File([b],String(i+1).padStart(2,'0')+'.png',{type:'image/png'}));c.width=c.height=0;
-  }
-  const supported=Boolean(navigator.share&&navigator.canShare&&navigator.canShare({files:galleryFiles}));
-  $('galleryShare').classList.toggle('hidden',!supported);
-  $('galleryHelp').textContent=supported?'اضغط الزر أدناه، ثم اختر «حفظ الصور» إذا ظهر في نافذة المشاركة.':'الحفظ الجماعي غير مدعوم في هذا المتصفح. اضغط مطولًا على صورة واختر حفظها، أو اضغط رقمها لتنزيلها.';
-  for(const [i,f] of galleryFiles.entries()){
-   const url=URL.createObjectURL(f);galleryURLs.push(url);const a=document.createElement('a');a.href=url;a.download=f.name;const image=document.createElement('img');image.src=url;image.alt='الشريحة '+(i+1);a.append(image,document.createTextNode(String(i+1).padStart(2,'0')));$('galleryGrid').append(a);
-  }
-  $('galleryStatus').textContent='';$('message').textContent='';$('gallery').showModal();
- }catch{clearGallery();$('message').textContent='تعذّر تجهيز الصور؛ جرّب صورة أصغر.';}
- finally{busy=false;document.querySelectorAll('aside input,aside select,aside button').forEach(e=>e.disabled=false);}
-};
-$('galleryShare').onclick=async()=>{
- if(!galleryFiles.length)return;
- // Prepared beforehand: invoke native sharing immediately within the tap's user activation.
- try{const sharing=navigator.share({files:galleryFiles});$('galleryShare').disabled=true;await sharing;$('galleryStatus').textContent='أُغلقت نافذة المشاركة. الحفظ يتم من الخيارات التي تختارها.';}
- catch(e){$('galleryStatus').textContent=e.name==='AbortError'?'أُلغيت العملية؛ يمكنك المحاولة مجددًا.':'تعذّرت المشاركة. جرّب Safari أو Chrome، أو احفظ كل صورة من معاينتها.';}
- finally{$('galleryShare').disabled=false;}
-};
-// ZIP STORE: standard CRC-32, local headers, central directory; no dependencies.
+$('galleryClose').onclick=()=>$('gallery').close();$('gallery').addEventListener('close',clearGallery);
+$('galleryPrepare').onclick=async()=>{if(!image||busy)return;lock(true);clearGallery();try{galleryFiles=await exportFiles();let supported=false;try{supported=Boolean(navigator.share&&navigator.canShare&&navigator.canShare({files:galleryFiles}));}catch{}$('shareReady').classList.toggle('hidden',!supported);$('galleryHelp').textContent=supported?'افتح خيارات الحفظ، ثم اختر «حفظ الصور» إذا ظهر.':'الحفظ الجماعي غير مدعوم هنا. اضغط مطولًا على الصورة لحفظها، أو اضغط رقمها للتنزيل.';galleryFiles.forEach((f,i)=>{const url=URL.createObjectURL(f);galleryURLs.push(url);const a=document.createElement('a'),im=document.createElement('img');a.href=url;a.download=f.name;im.src=url;im.alt='الصورة '+(i+1);a.append(im,document.createTextNode(f.name));$('galleryGrid').append(a);});$('shareStatus').textContent='';setStatus('');$('gallery').showModal();}catch{clearGallery();setStatus('تعذّر تجهيز الصور؛ جرّب صورة أصغر.');}finally{lock(false);}};
+$('shareReady').onclick=async()=>{if(!galleryFiles.length)return;try{const task=navigator.share({files:galleryFiles});$('shareReady').disabled=true;await task;$('shareStatus').textContent='أُغلقت نافذة المشاركة؛ الحفظ يتم وفق الخيار الذي اخترته.';}catch(e){$('shareStatus').textContent=e.name==='AbortError'?'أُلغيت العملية؛ يمكنك المحاولة مجددًا.':'تعذّرت المشاركة؛ احفظ الصور منفردة أو جرّب Safari أو Chrome.';}finally{$('shareReady').disabled=false;}};
+new ResizeObserver(()=>{requestRender();drawSource();}).observe($('stage'));
 const crcTable=Array.from({length:256},(_,n)=>{for(let k=0;k<8;k++)n=(n&1)?0xedb88320^(n>>>1):n>>>1;return n>>>0});function crc32(a){let c=0xffffffff;for(const v of a)c=crcTable[(c^v)&255]^(c>>>8);return (c^0xffffffff)>>>0;}
 function header(size){const a=new Uint8Array(size);return {a,v:new DataView(a.buffer)}}
 async function zip(files){let offset=0;const parts=[],central=[];for(const f of files){const name=new TextEncoder().encode(f.name),data=new Uint8Array(await f.blob.arrayBuffer()),crc=crc32(data),l=header(30);l.v.setUint32(0,0x04034b50,true);l.v.setUint16(4,20,true);l.v.setUint32(14,crc,true);l.v.setUint32(18,data.length,true);l.v.setUint32(22,data.length,true);l.v.setUint16(26,name.length,true);parts.push(l.a,name,data);const c=header(46);c.v.setUint32(0,0x02014b50,true);c.v.setUint16(4,20,true);c.v.setUint16(6,20,true);c.v.setUint32(16,crc,true);c.v.setUint32(20,data.length,true);c.v.setUint32(24,data.length,true);c.v.setUint16(28,name.length,true);c.v.setUint32(42,offset,true);central.push(c.a,name);offset+=30+name.length+data.length;}const len=central.reduce((s,a)=>s+a.length,0),end=header(22);end.v.setUint32(0,0x06054b50,true);end.v.setUint16(8,files.length,true);end.v.setUint16(10,files.length,true);end.v.setUint32(12,len,true);end.v.setUint32(16,offset,true);return new Blob([...parts,...central,end.a],{type:'application/zip'});}
-$('download').onclick=async()=>{if(!img||busy)return;busy=true;document.querySelectorAll('aside input,aside select,aside button').forEach(e=>e.disabled=true);try{const files=[];for(let i=0;i<values().n;i++){const index=$('order').value==='rtl'?values().n-1-i:i;$('message').textContent='جارٍ تجهيز الشريحة '+(i+1)+' من '+values().n;await new Promise(r=>requestAnimationFrame(r));const c=slice(index);files.push({name:String(i+1).padStart(2,'0')+'.png',blob:await blob(c)});c.width=c.height=0;}save(await zip(files),filename+'-strips.zip');$('message').textContent='تم تجهيز الشرائح ✓';}catch{$('message').textContent='تعذّر التصدير؛ جرّب صورة أصغر.';}finally{busy=false;document.querySelectorAll('aside input,aside select,aside button').forEach(e=>e.disabled=false);}};
-</script></body></html>
+
+</script>
+</body>
+</html>
